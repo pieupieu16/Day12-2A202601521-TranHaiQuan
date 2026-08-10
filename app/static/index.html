@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Liquid AI Agent — Cloud Deployment Dashboard</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      /* Color Palette: Xanh - Trắng (Blue & White) */
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-light: #eff6ff;
+      --primary-border: #bfdbfe;
+      --accent: #3b82f6;
+      --accent-glow: rgba(37, 99, 235, 0.15);
+      
+      --bg-page: #f8fafc;
+      --surface: #ffffff;
+      --surface-subtle: #f1f5f9;
+      
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-light: #94a3b8;
+      
+      --success: #10b981;
+      --success-bg: #ecfdf5;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --danger-bg: #fef2f2;
+      
+      --border-color: #e2e8f0;
+      --border-focus: #93c5fd;
+      
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 10px 15px -3px rgba(37, 99, 235, 0.08), 0 4px 6px -4px rgba(37, 99, 235, 0.04);
+      --shadow-glow: 0 0 20px rgba(37, 99, 235, 0.2);
+      
+      --radius-sm: 0.375rem;
+      --radius-md: 0.75rem;
+      --radius-lg: 1rem;
+      --radius-full: 9999px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Keyframe Animations */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.1); }
+    }
+
+    @keyframes typingDot {
+      0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+      40% { transform: scale(1); opacity: 1; }
+    }
+
+    .fade-in-up {
+      animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Header Navigation */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0.875rem 1.5rem;
+    }
+
+    .header-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+
+    .brand-icon {
+      width: 2.5rem;
+      height: 2.5rem;
+      background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 50%, #60a5fa 100%);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .brand-title {
+      font-size: 1.125rem;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+    }
+
+    .brand-subtitle {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--primary);
+      background: var(--primary-light);
+      padding: 0.125rem 0.5rem;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--primary-border);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem 0.875rem;
+      background: var(--success-bg);
+      border: 1px solid #a7f3d0;
+      color: #065f46;
+      border-radius: var(--radius-full);
+      font-size: 0.8125rem;
+      font-weight: 600;
+    }
+
+    .status-dot {
+      width: 0.5rem;
+      height: 0.5rem;
+      background-color: var(--success);
+      border-radius: 50%;
+      animation: pulseGlow 2s infinite ease-in-out;
+    }
+
+    /* Main Container */
+    main {
+      max-width: 1280px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+      flex: 1;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    /* Top Grid Metrics */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+
+    .metric-card {
+      background: var(--surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .metric-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--primary-border);
+    }
+
+    .metric-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+    }
+
+    .metric-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .metric-value {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+    }
+
+    .metric-sub {
+      font-size: 0.75rem;
+      color: var(--text-light);
+    }
+
+    /* Config Bar */
+    .config-card {
+      background: var(--surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem 1.5rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .config-inputs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+      flex: 1;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      flex: 1;
+      min-width: 220px;
+    }
+
+    .input-group label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+    }
+
+    .input-control {
+      padding: 0.625rem 0.875rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      font-size: 0.875rem;
+      font-family: inherit;
+      color: var(--text-main);
+      background-color: var(--surface-subtle);
+      outline: none;
+    }
+
+    .input-control:focus {
+      border-color: var(--primary);
+      background-color: var(--surface);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    /* Chat Section */
+    .chat-layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 1.5rem;
+      min-height: 520px;
+    }
+
+    @media (max-width: 1024px) {
+      .chat-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .chat-card {
+      background: var(--surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .chat-header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border-color);
+      background: var(--primary-light);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .chat-header-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .model-badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #1e40af;
+      background: #dbeafe;
+      padding: 0.25rem 0.625rem;
+      border-radius: var(--radius-full);
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 1.25rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-height: 440px;
+      background-color: #fafafa;
+    }
+
+    .message-bubble {
+      max-width: 80%;
+      padding: 0.875rem 1.125rem;
+      border-radius: 1.125rem;
+      font-size: 0.9375rem;
+      line-height: 1.5;
+      position: relative;
+      word-break: break-word;
+    }
+
+    .message-user {
+      align-self: flex-end;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: white;
+      border-bottom-right-radius: 0.25rem;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
+    }
+
+    .message-assistant {
+      align-self: flex-start;
+      background: var(--surface);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      border-bottom-left-radius: 0.25rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .message-meta {
+      font-size: 0.6875rem;
+      margin-top: 0.375rem;
+      opacity: 0.8;
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .message-assistant .message-meta {
+      color: var(--text-light);
+    }
+
+    .message-user .message-meta {
+      color: rgba(255, 255, 255, 0.85);
+      justify-content: flex-end;
+    }
+
+    /* Typing Indicator */
+    .typing-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.75rem 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border-color);
+      border-radius: 1rem;
+      align-self: flex-start;
+    }
+
+    .typing-dot {
+      width: 0.375rem;
+      height: 0.375rem;
+      background: var(--primary);
+      border-radius: 50%;
+      animation: typingDot 1.4s infinite ease-in-out both;
+    }
+
+    .typing-dot:nth-child(1) { animation-delay: 0s; }
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    /* Input Area */
+    .chat-input-container {
+      padding: 1rem 1.25rem;
+      border-top: 1px solid var(--border-color);
+      background: var(--surface);
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .chat-input {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      font-size: 0.9375rem;
+      font-family: inherit;
+      outline: none;
+    }
+
+    .chat-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    .btn-send {
+      padding: 0.75rem 1.5rem;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      font-weight: 700;
+      font-size: 0.875rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+    }
+
+    .btn-send:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+
+    .btn-send:active {
+      transform: translateY(0);
+    }
+
+    /* Sidebar Prompts */
+    .sidebar-card {
+      background: var(--surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .sidebar-title {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .sample-prompts {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .prompt-btn {
+      padding: 0.75rem 1rem;
+      background: var(--primary-light);
+      border: 1px solid var(--primary-border);
+      border-radius: var(--radius-md);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: #1e40af;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .prompt-btn:hover {
+      background: #dbeafe;
+      transform: translateX(2px);
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border-color);
+      padding: 1.25rem;
+      text-align: center;
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      background: var(--surface);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header Nav -->
+  <header>
+    <div class="header-container">
+      <a href="#" class="brand">
+        <div class="brand-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v8"></path>
+            <path d="m4.93 10.93 1.41 1.41"></path>
+            <path d="M2 18h20"></path>
+            <path d="M20 18v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2"></path>
+            <path d="m17.66 10.93-1.41 1.41"></path>
+            <path d="M12 12a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"></path>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-title">Liquid AI Agent Cloud</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">Model: Liquid AI LFM2.5-2.6B</div>
+        </div>
+      </a>
+
+      <div class="header-actions">
+        <span class="brand-subtitle">v1.0.0</span>
+        <div class="status-badge" id="liveBadge">
+          <div class="status-dot"></div>
+          <span>System Healthy</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="fade-in-up">
+
+    <!-- Metrics Cards -->
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-header">
+          <span>Liveness Probe (/health)</span>
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+        </div>
+        <div class="metric-value" id="healthStatus">200 OK</div>
+        <div class="metric-sub">Process status: Healthy & Running</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-header">
+          <span>Readiness Probe (/ready)</span>
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        </div>
+        <div class="metric-value" id="readyStatus">200 Ready</div>
+        <div class="metric-sub">Redis State Store: Connected</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-header">
+          <span>Rate Limiter (ZSET Window)</span>
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        </div>
+        <div class="metric-value" id="rateValue">0 / 10</div>
+        <div class="metric-sub">Requests in last 60 seconds</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-header">
+          <span>Cost Guard Budget</span>
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+        </div>
+        <div class="metric-value" id="costValue">$0.000 / $10.0</div>
+        <div class="metric-sub">Monthly accumulative spend</div>
+      </div>
+    </div>
+
+    <!-- API Config Panel -->
+    <div class="config-card">
+      <div class="config-inputs">
+        <div class="input-group">
+          <label for="apiKeyInput">X-API-Key (Secret Header)</label>
+          <input type="password" id="apiKeyInput" class="input-control" value="zbm-4XhMGXm9K5EeWlVoEfUR6Old7Rt2zAUaogGQGMU" placeholder="Nhập AGENT_API_KEY...">
+        </div>
+        <div class="input-group">
+          <label for="userIdInput">X-User-Id (Client ID)</label>
+          <input type="text" id="userIdInput" class="input-control" value="sv-demo-user" placeholder="Nhập User ID...">
+        </div>
+      </div>
+      <button class="btn-send" style="background: var(--surface-subtle); color: var(--text-main); border: 1px solid var(--border-color); box-shadow: none;" onclick="checkStatus()">
+        ↻ Refresh Status
+      </button>
+    </div>
+
+    <!-- Chat & Sidebar Layout -->
+    <div class="chat-layout">
+      <!-- Main Chat Container -->
+      <div class="chat-card">
+        <div class="chat-header">
+          <div class="chat-header-info">
+            <svg width="20" height="20" fill="none" stroke="var(--primary)" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            <span style="font-weight: 700;">Hội thoại AI Agent</span>
+          </div>
+          <span class="model-badge">Liquid AI LFM2.5-2.6B</span>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+          <div class="message-bubble message-assistant">
+            Xin chào! Tôi là AI Agent được vận hành bởi model <strong>Liquid AI LFM2.5-2.6B</strong> trên hạ tầng Cloud Stateless (FastAPI + Redis). Bạn có thể hỏi tôi bất kỳ câu hỏi nào!
+            <div class="message-meta">System initialized • 0 tokens</div>
+          </div>
+        </div>
+
+        <div class="chat-input-container">
+          <input type="text" id="questionInput" class="chat-input" placeholder="Nhập câu hỏi cho AI Agent (ví dụ: Docker là gì?)..." onkeydown="if(event.key==='Enter') sendQuestion()">
+          <button class="btn-send" onclick="sendQuestion()">
+            <span>Gửi</span>
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Sidebar Prompts & Info -->
+      <div class="sidebar-card">
+        <div class="sidebar-title">
+          <svg width="18" height="18" fill="none" stroke="var(--primary)" stroke-width="2" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 3z"></path></svg>
+          <span>Gợi Ý Câu Hỏi Mẫu</span>
+        </div>
+
+        <div class="sample-prompts">
+          <button class="prompt-btn" onclick="usePrompt('Docker là gì và vì sao cần containerization?')">
+            💡 Docker là gì và vì sao cần containerization?
+          </button>
+          <button class="prompt-btn" onclick="usePrompt('Kiến trúc Stateless khác gì Stateful khi scale out?')">
+            ⚡ Kiến trúc Stateless khác gì Stateful khi scale out?
+          </button>
+          <button class="prompt-btn" onclick="usePrompt('Phân biệt endpoint /health (Liveness) và /ready (Readiness)?')">
+            🛡️ Phân biệt endpoint /health và /ready?
+          </button>
+          <button class="prompt-btn" onclick="usePrompt('Giải thích thuật toán Sliding Window trong Rate Limiting?')">
+            ⏱️ Thuật toán Sliding Window trong Rate Limiting?
+          </button>
+        </div>
+
+        <div style="margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--border-color); font-size: 0.75rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 0.375rem;">
+          <div><strong>Model:</strong> Liquid AI LFM2.5-2.6B</div>
+          <div><strong>Architecture:</strong> 12-Factor App / Multi-stage Docker</div>
+          <div><strong>State Storage:</strong> Redis List & ZSET</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    Cloud Services & Deployment Platform — Powered by FastAPI & Liquid AI (LFM2.5-2.6B)
+  </footer>
+
+  <script>
+    let reqCount = 0;
+    let totalCost = 0;
+
+    async function checkStatus() {
+      try {
+        const hRes = await fetch('/health');
+        const hData = await hRes.json();
+        document.getElementById('healthStatus').innerText = hRes.status + ' ' + (hData.status || 'OK');
+      } catch(e) {
+        document.getElementById('healthStatus').innerText = 'Offline';
+      }
+
+      try {
+        const rRes = await fetch('/ready');
+        const rData = await rRes.json();
+        document.getElementById('readyStatus').innerText = rRes.status + ' ' + (rData.status || 'Ready');
+      } catch(e) {
+        document.getElementById('readyStatus').innerText = 'Not Ready';
+      }
+    }
+
+    function usePrompt(text) {
+      document.getElementById('questionInput').value = text;
+      sendQuestion();
+    }
+
+    async function sendQuestion() {
+      const input = document.getElementById('questionInput');
+      const question = input.value.trim();
+      const apiKey = document.getElementById('apiKeyInput').value.trim();
+      const userId = document.getElementById('userIdInput').value.trim();
+
+      if (!question) return;
+
+      const chatBox = document.getElementById('chatMessages');
+
+      // Append User Message
+      const userBubble = document.createElement('div');
+      userBubble.className = 'message-bubble message-user';
+      userBubble.innerHTML = `<div>${escapeHtml(question)}</div><div class="message-meta">User (${escapeHtml(userId)}) • Just now</div>`;
+      chatBox.appendChild(userBubble);
+
+      input.value = '';
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      // Show Typing Indicator
+      const typing = document.createElement('div');
+      typing.className = 'typing-indicator';
+      typing.id = 'typingIndicator';
+      typing.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+      chatBox.appendChild(typing);
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      try {
+        const res = await fetch('/ask', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-API-Key': apiKey,
+            'X-User-Id': userId
+          },
+          body: JSON.stringify({ question })
+        });
+
+        chatBox.removeChild(typing);
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          const botBubble = document.createElement('div');
+          botBubble.className = 'message-bubble message-assistant';
+          botBubble.style.borderColor = '#fca5a5';
+          botBubble.style.background = '#fef2f2';
+          botBubble.innerHTML = `<div style="color: #b91c1c; font-weight: 600;">⚠️ Error ${res.status}: ${escapeHtml(errData.detail || 'Request failed')}</div>`;
+          chatBox.appendChild(botBubble);
+        } else {
+          const data = await res.json();
+          reqCount++;
+          totalCost += (data.cost_usd || 0);
+
+          document.getElementById('rateValue').innerText = reqCount + ' / 10';
+          document.getElementById('costValue').innerText = '$' + totalCost.toFixed(5) + ' / $10.0';
+
+          const botBubble = document.createElement('div');
+          botBubble.className = 'message-bubble message-assistant';
+          botBubble.innerHTML = `
+            <div>${escapeHtml(data.answer)}</div>
+            <div class="message-meta">
+              <span>Tokens: ${data.tokens?.in || 0} in / ${data.tokens?.out || 0} out</span>
+              <span>Cost: $${(data.cost_usd || 0).toFixed(6)}</span>
+              <span>History: ${data.history_length || 0} turns</span>
+            </div>
+          `;
+          chatBox.appendChild(botBubble);
+        }
+      } catch(err) {
+        if (document.getElementById('typingIndicator')) {
+          chatBox.removeChild(typing);
+        }
+        const botBubble = document.createElement('div');
+        botBubble.className = 'message-bubble message-assistant';
+        botBubble.style.borderColor = '#fca5a5';
+        botBubble.style.background = '#fef2f2';
+        botBubble.innerHTML = `<div style="color: #b91c1c;">⚠️ Network error. Connection failed.</div>`;
+        chatBox.appendChild(botBubble);
+      }
+
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function escapeHtml(text) {
+      return String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    // Initial check on load
+    checkStatus();
+  </script>
+</body>
+</html>
