@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Liquid AI Agent — Cloud Deployment Dashboard</title>
-  
+
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet">
+
   <style>
     :root {
       /* Color Palette: Xanh - Trắng (Blue & White) */
@@ -19,29 +22,29 @@
       --primary-border: #bfdbfe;
       --accent: #3b82f6;
       --accent-glow: rgba(37, 99, 235, 0.15);
-      
+
       --bg-page: #f8fafc;
       --surface: #ffffff;
       --surface-subtle: #f1f5f9;
-      
+
       --text-main: #0f172a;
       --text-muted: #475569;
       --text-light: #94a3b8;
-      
+
       --success: #10b981;
       --success-bg: #ecfdf5;
       --warning: #f59e0b;
       --danger: #ef4444;
       --danger-bg: #fef2f2;
-      
+
       --border-color: #e2e8f0;
       --border-focus: #93c5fd;
-      
+
       --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
       --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
       --shadow-lg: 0 10px 15px -3px rgba(37, 99, 235, 0.08), 0 4px 6px -4px rgba(37, 99, 235, 0.04);
       --shadow-glow: 0 0 20px rgba(37, 99, 235, 0.2);
-      
+
       --radius-sm: 0.375rem;
       --radius-md: 0.75rem;
       --radius-lg: 1rem;
@@ -67,18 +70,44 @@
 
     /* Keyframe Animations */
     @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     @keyframes pulseGlow {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.6; transform: scale(1.1); }
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.6;
+        transform: scale(1.1);
+      }
     }
 
     @keyframes typingDot {
-      0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
-      40% { transform: scale(1); opacity: 1; }
+
+      0%,
+      80%,
+      100% {
+        transform: scale(0.6);
+        opacity: 0.4;
+      }
+
+      40% {
+        transform: scale(1);
+        opacity: 1;
+      }
     }
 
     .fade-in-up {
@@ -415,9 +444,17 @@
       animation: typingDot 1.4s infinite ease-in-out both;
     }
 
-    .typing-dot:nth-child(1) { animation-delay: 0s; }
-    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
-    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+    .typing-dot:nth-child(1) {
+      animation-delay: 0s;
+    }
+
+    .typing-dot:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .typing-dot:nth-child(3) {
+      animation-delay: 0.4s;
+    }
 
     /* Input Area */
     .chat-input-container {
@@ -522,6 +559,7 @@
     }
   </style>
 </head>
+
 <body>
 
   <!-- Header Nav -->
@@ -529,7 +567,8 @@
     <div class="header-container">
       <a href="#" class="brand">
         <div class="brand-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 2v8"></path>
             <path d="m4.93 10.93 1.41 1.41"></path>
             <path d="M2 18h20"></path>
@@ -562,7 +601,9 @@
       <div class="metric-card">
         <div class="metric-header">
           <span>Liveness Probe (/health)</span>
-          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+          </svg>
         </div>
         <div class="metric-value" id="healthStatus">200 OK</div>
         <div class="metric-sub">Process status: Healthy & Running</div>
@@ -571,7 +612,9 @@
       <div class="metric-card">
         <div class="metric-header">
           <span>Readiness Probe (/ready)</span>
-          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
         </div>
         <div class="metric-value" id="readyStatus">200 Ready</div>
         <div class="metric-sub">Redis State Store: Connected</div>
@@ -580,7 +623,10 @@
       <div class="metric-card">
         <div class="metric-header">
           <span>Rate Limiter (ZSET Window)</span>
-          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
         </div>
         <div class="metric-value" id="rateValue">0 / 10</div>
         <div class="metric-sub">Requests in last 60 seconds</div>
@@ -589,7 +635,10 @@
       <div class="metric-card">
         <div class="metric-header">
           <span>Cost Guard Budget</span>
-          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <line x1="12" y1="1" x2="12" y2="23"></line>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
         </div>
         <div class="metric-value" id="costValue">$0.000 / $10.0</div>
         <div class="metric-sub">Monthly accumulative spend</div>
@@ -601,14 +650,17 @@
       <div class="config-inputs">
         <div class="input-group">
           <label for="apiKeyInput">X-API-Key (Secret Header)</label>
-          <input type="password" id="apiKeyInput" class="input-control" value="zbm-4XhMGXm9K5EeWlVoEfUR6Old7Rt2zAUaogGQGMU" placeholder="Nhập AGENT_API_KEY...">
+          <input type="password" id="apiKeyInput" class="input-control"
+            value="zbm-4XhMGXm9K5EeWlVoEfUR6Old7Rt2zAUaogGQGMU" placeholder="Nhập AGENT_API_KEY...">
         </div>
         <div class="input-group">
           <label for="userIdInput">X-User-Id (Client ID)</label>
           <input type="text" id="userIdInput" class="input-control" value="sv-demo-user" placeholder="Nhập User ID...">
         </div>
       </div>
-      <button class="btn-send" style="background: var(--surface-subtle); color: var(--text-main); border: 1px solid var(--border-color); box-shadow: none;" onclick="checkStatus()">
+      <button class="btn-send"
+        style="background: var(--surface-subtle); color: var(--text-main); border: 1px solid var(--border-color); box-shadow: none;"
+        onclick="checkStatus()">
         ↻ Refresh Status
       </button>
     </div>
@@ -619,7 +671,9 @@
       <div class="chat-card">
         <div class="chat-header">
           <div class="chat-header-info">
-            <svg width="20" height="20" fill="none" stroke="var(--primary)" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            <svg width="20" height="20" fill="none" stroke="var(--primary)" stroke-width="2.5" viewBox="0 0 24 24">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
             <span style="font-weight: 700;">Hội thoại AI Agent</span>
           </div>
           <span class="model-badge">Liquid AI LFM2.5-2.6B</span>
@@ -627,16 +681,22 @@
 
         <div class="chat-messages" id="chatMessages">
           <div class="message-bubble message-assistant">
-            Xin chào! Tôi là AI Agent được vận hành bởi model <strong>Liquid AI LFM2.5-2.6B</strong> trên hạ tầng Cloud Stateless (FastAPI + Redis). Bạn có thể hỏi tôi bất kỳ câu hỏi nào!
+            Xin chào! Tôi là AI Agent được vận hành bởi model <strong>Pieudz</strong> Bạn có thể hỏi tôi bất kỳ câu hỏi
+            nào!
             <div class="message-meta">System initialized • 0 tokens</div>
           </div>
         </div>
 
         <div class="chat-input-container">
-          <input type="text" id="questionInput" class="chat-input" placeholder="Nhập câu hỏi cho AI Agent (ví dụ: Docker là gì?)..." onkeydown="if(event.key==='Enter') sendQuestion()">
+          <input type="text" id="questionInput" class="chat-input"
+            placeholder="Nhập câu hỏi cho AI Agent (ví dụ: Docker là gì?)..."
+            onkeydown="if(event.key==='Enter') sendQuestion()">
           <button class="btn-send" onclick="sendQuestion()">
             <span>Gửi</span>
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
           </button>
         </div>
       </div>
@@ -644,7 +704,11 @@
       <!-- Sidebar Prompts & Info -->
       <div class="sidebar-card">
         <div class="sidebar-title">
-          <svg width="18" height="18" fill="none" stroke="var(--primary)" stroke-width="2" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 3z"></path></svg>
+          <svg width="18" height="18" fill="none" stroke="var(--primary)" stroke-width="2" viewBox="0 0 24 24">
+            <path
+              d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 3z">
+            </path>
+          </svg>
           <span>Gợi Ý Câu Hỏi Mẫu</span>
         </div>
 
@@ -655,7 +719,8 @@
           <button class="prompt-btn" onclick="usePrompt('Kiến trúc Stateless khác gì Stateful khi scale out?')">
             ⚡ Kiến trúc Stateless khác gì Stateful khi scale out?
           </button>
-          <button class="prompt-btn" onclick="usePrompt('Phân biệt endpoint /health (Liveness) và /ready (Readiness)?')">
+          <button class="prompt-btn"
+            onclick="usePrompt('Phân biệt endpoint /health (Liveness) và /ready (Readiness)?')">
             🛡️ Phân biệt endpoint /health và /ready?
           </button>
           <button class="prompt-btn" onclick="usePrompt('Giải thích thuật toán Sliding Window trong Rate Limiting?')">
@@ -663,7 +728,8 @@
           </button>
         </div>
 
-        <div style="margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--border-color); font-size: 0.75rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 0.375rem;">
+        <div
+          style="margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--border-color); font-size: 0.75rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 0.375rem;">
           <div><strong>Model:</strong> Liquid AI LFM2.5-2.6B</div>
           <div><strong>Architecture:</strong> 12-Factor App / Multi-stage Docker</div>
           <div><strong>State Storage:</strong> Redis List & ZSET</div>
@@ -687,7 +753,7 @@
         const hRes = await fetch('/health');
         const hData = await hRes.json();
         document.getElementById('healthStatus').innerText = hRes.status + ' ' + (hData.status || 'OK');
-      } catch(e) {
+      } catch (e) {
         document.getElementById('healthStatus').innerText = 'Offline';
       }
 
@@ -695,7 +761,7 @@
         const rRes = await fetch('/ready');
         const rData = await rRes.json();
         document.getElementById('readyStatus').innerText = rRes.status + ' ' + (rData.status || 'Ready');
-      } catch(e) {
+      } catch (e) {
         document.getElementById('readyStatus').innerText = 'Not Ready';
       }
     }
@@ -773,7 +839,7 @@
           `;
           chatBox.appendChild(botBubble);
         }
-      } catch(err) {
+      } catch (err) {
         if (document.getElementById('typingIndicator')) {
           chatBox.removeChild(typing);
         }
@@ -796,4 +862,5 @@
     checkStatus();
   </script>
 </body>
+
 </html>
